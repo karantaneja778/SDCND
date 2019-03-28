@@ -10,12 +10,12 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./test_output_images/gray.jpg "Grayscale"
-[image2]: ./test_output_images/blur_gray.jpg "Gaussian Blur"
-[image3]: ./test_output_images/edges.jpg "Canny Edge Detection"
-[image4]: ./test_output_images/masked_edges.jpg "Region of interest"
-[image5]: ./test_output_images/lines.jpg "Hough Transform"
-[image6]: ./test_output_images/masked_image.jpg "Final Image"
+[image1]: ./test_images_output/gray.jpg "Grayscale"
+[image2]: ./test_images_output/blur_gray.jpg "Gaussian Blur"
+[image3]: ./test_images_output/edges.jpg "Canny Edge Detection"
+[image4]: ./test_images_output/masked_edges.jpg "Region of interest"
+[image5]: ./test_images_output/lines.jpg "Hough Transform"
+[image6]: ./test_images_output/masked_image.jpg "Final Image"
 
 ---
 
