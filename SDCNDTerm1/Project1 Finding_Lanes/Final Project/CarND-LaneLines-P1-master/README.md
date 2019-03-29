@@ -1,13 +1,5 @@
 # **Finding Lane Lines on the Road** 
 ---
-
-**Finding Lane Lines on the Road**
-
-The goals / steps of this project are the following:
-* Make a pipeline that finds lane lines on the road
-* Reflect on your work in a written report
-
-
 [//]: # (Image References)
 
 [image1]: ./test_images_output/gray.jpg "Grayscale"
@@ -16,7 +8,11 @@ The goals / steps of this project are the following:
 [image4]: ./test_images_output/masked_edges.jpg "Region of interest"
 [image5]: ./test_images_output/lines.jpg "Hough Transform"
 [image6]: ./test_images_output/masked_image.jpg "Final Image"
+[image7]: ./test_images/solidYellowCurve2.jpg "Original Image"
+**Finding Lane Lines on the Road**
 
+### Original Sample Image
+![alt text][image7]
 ---
 
 ### Reflection
