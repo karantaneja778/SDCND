@@ -21,9 +21,9 @@ The goals / steps of this project are the following:
 
 ### Reflection
 
-### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
+### 1. Pipeline to detect lane lines and draw a mask over it.
 
-My pipeline consisted of 5 steps. 
+My pipeline consisted of six steps. 
 
 First, I converted the images to grayscale
 
@@ -44,7 +44,7 @@ Fourth, I defined region of interest for which I put a triangular mask on the ed
 
 Fifth, I applied Hough transform to draw straigh lines over left and right lane
 
-In order to draw a single line on the left and right lanes, I modified the draw_lines() function -
+In order to draw a single line on the left and right lanes, I modified the draw_lines() function as follows -
 1. Identified all x and y for left and right lanes based on the slopes of the lines detected by hough transform. Negative slopes gave me left lane and similary positive slope gave me right lane.
 2. After doing various tests, I came to assumption that for detecting lanes in straight roads, I can consider only slopes between 0.5 and 1 for right lanes and between -1 and -0.5 for left lane. This gives me more accurate results for the project videos.
 3. After getting all x and y, I used numpy polyfit and poly1d functions to get 1d equation of straight lines for left and right lane.
@@ -67,7 +67,7 @@ Last step was to add these lines to the original image and final results were ob
 My pipeline is based on the assumption that the input images/videos consist of car going straight on the road when camera mounted in the center front of the car.
 This will not work on turns and bends.
 
-### 3. Possible improvements to your pipeline
+### 3. Possible improvements to the pipeline
 
 This can be improved by the following steps-
 
