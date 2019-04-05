@@ -1,56 +1,75 @@
 # **Finding Lane Lines on the Road** 
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+---
+[//]: # (Image References)
 
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
+[image1]: ./test_images_output/gray.jpg "Grayscale"
+[image2]: ./test_images_output/blur_gray.jpg "Gaussian Blur"
+[image3]: ./test_images_output/edges.jpg "Canny Edge Detection"
+[image4]: ./test_images_output/masked_edges.jpg "Region of interest"
+[image5]: ./test_images_output/lines.jpg "Hough Transform"
+[image6]: ./test_images_output/masked_image.jpg "Final Image"
+[image7]: ./test_images/solidYellowCurve2.jpg "Original Image"
 
-Overview
+### Original Sample Image
+![alt text][image7]
 ---
 
-When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
+### Reflection
 
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
+### 1. Pipeline to detect lane lines and draw a mask over it.
 
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
+My pipeline consisted of six steps. 
 
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
+First, I converted the images to grayscale
+
+![alt text][image1]
+
+Second, I applied Gaussian Blur to smoothen the image
+
+![alt text][image2]
+
+Third, Edges were detected in the smoothen image using Canny Edge Detection.
+In my case, lower and upper threshold values 50 and 150 worked fine.
+
+![alt text][image3]
+
+Fourth, I defined region of interest for which I put a triangular mask on the edges image, this gave me approximation of the lane that needs to be detected.
+
+![alt text][image4]
+
+Fifth, I applied Hough transform to draw straigh lines over left and right lane
+
+In order to draw a single line on the left and right lanes, I modified the draw_lines() function as follows -
+1. Identified all x and y for left and right lanes based on the slopes of the lines detected by hough transform. Negative slopes gave me left lane and similary positive slope gave me right lane.
+2. After doing various tests, I came to assumption that for detecting lanes in straight roads, I can consider only slopes between 0.5 and 1 for right lanes and between -1 and -0.5 for left lane. This gives me more accurate results for the project videos.
+3. After getting all x and y, I used numpy polyfit and poly1d functions to get 1d equation of straight lines for left and right lane.
+4. I took starting point of the left and right lanes as max y, i.e. starting from the bottom of the image.
+5. Based on above y, and using 1d equation corresponding x values are calculated for left and right lanes
+6. Similarly for end point of the lane, I used center of the x-axis and calculated corresponding y values for left and right lanes.
+7. For left lane, remove 20 pixels form x before calculating y value to remove the intersection of left and right lanes. Similary for right lane add 20 pixels.
+8. Last step was to just draw straight lines using opencv line function to display left and right lanes.
+
+![alt text][image5]
+
+Last step was to add these lines to the original image and final results were obtained.
+
+![alt text][image6]
 
 
-Creating a Great Writeup
----
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
 
-1. Describe the pipeline
+### 2. Potential shortcomings with the current pipeline
 
-2. Identify any shortcomings
+My pipeline is based on the assumption that the input images/videos consist of car going straight on the road when camera mounted in the center front of the car.
+This will not work on turns and bends.
 
-3. Suggest possible improvements
+### 3. Possible improvements to the pipeline
 
-We encourage using images in your writeup to demonstrate how your pipeline works.  
+This can be improved by the following steps-
 
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
-
-
-The Project
----
-
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
-
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/83ec35ee-1e02-48a5-bdb7-d244bd47c2dc/lessons/8c82408b-a217-4d09-b81d-1bda4c6380ef/concepts/4f1870e0-3849-43e4-b670-12e6f2d4b7a7) if you haven't already.
-
-**Step 2:** Open the code in a Jupyter Notebook
-
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out [Udacity's free course on Anaconda and Jupyter Notebooks](https://classroom.udacity.com/courses/ud1111) to get started.
-
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
-
-`> jupyter notebook`
-
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
-
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+1. Vertically divide image into two parts, left and right.
+2. Apply step 1, 2 and 3 of my current pipeline
+3. For left and right images individually, detect points of interest.
+       i. For left lane, get all the lines using hough transform and then get x and y for left lanes from the lines which are nearest to the line x = x_max
+       ii. For right lane, get all the lines using hough transform and then get x and y for right lanes from the lines which are nearest to the line x = 0
+4. Then create lane lines from the identified points and mask on original image.
 
