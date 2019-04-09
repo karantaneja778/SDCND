@@ -117,8 +117,6 @@ After that all the points between detected left and right lane and identified an
 
 Radius of curvature is also calculated in my funtion `draw_lanes(warped_binary)` and stored as a global variable.
 
-Radius of Curvature
-
 The radius of curvature at any point x of the function x=f(y) is given as follows:
 
 <img src="https://latex.codecogs.com/gif.latex?RCurve&space;=&space;\frac{(1&plus;(2Ay&plus;B)^{2})^{3/2}}{2A}" title="RCurve = \frac{(1+(2Ay+B)^{2})^{3/2}}{2A}" />
@@ -149,6 +147,6 @@ Here's a [link to my video result](./output_video.mp4)
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+#### 
+I used all the tools that were taught to me in my Advanced Lane Finding algorithm. I found out the pipeline I created is pretty slow and it is doing on an average 6-7 iterations per second which are not something we can put in the real world.
+I tried to explore 
