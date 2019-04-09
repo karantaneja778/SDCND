@@ -119,27 +119,21 @@ Radius of curvature is also calculated in my funtion `draw_lanes(warped_binary)`
 
 Radius of Curvature
 
-The radius of curvature (awesome tutorial here) at any point xxx of the function x=f(y)x = f(y)x=f(y) is given as follows:
+The radius of curvature at any point x of the function x=f(y) is given as follows:
 
-Rcurve=[1+(dxdy)2]3/2∣d2xdy2∣\LARGE R_{curve} = \frac{[1 + (\frac{dx}{dy})^2]^{3/2}}{|\frac{d^2x}{dy^2}|}Rcurve​=∣dy2d2x​∣[1+(dydx​)2]3/2​
+<img src="https://latex.codecogs.com/gif.latex?RCurve&space;=&space;\frac{(1&plus;(2Ay&plus;B)^{2})^{3/2}}{2A}" title="RCurve = \frac{(1+(2Ay+B)^{2})^{3/2}}{2A}" />
 
-In the case of the second order polynomial above, the first and second derivatives are:
+I took the max value of y and corresponding x value, and using my left and right lane polynomial equations, I calculated left and right lane curvatures.
 
-f′(y)=dxdy=2Ay+B\large f'(y) = \frac{dx}{dy} = 2Ay + Bf′(y)=dydx​=2Ay+B
-
-f′′(y)=d2xdy2=2A\large f''(y) = \frac{d^2x}{dy^2} = 2Af′′(y)=dy2d2x​=2A
-
-So, our equation for radius of curvature becomes:
-
-Rcurve=(1+(2Ay+B)2)3/2∣2A∣\LARGE R_{curve} = \frac{(1 + (2Ay + B)^2)^{3/2}}{\left |2A \right |}Rcurve​=∣2A∣(1+(2Ay+B)2)3/2​
-
-The yyy values of your image increase from top to bottom, so if, for example, you wanted to measure the radius of curvature closest to your vehicle, you could evaluate the formula above at the yyy value corresponding to the bottom of your image, or in Python, at yvalue = image.shape[0].
+Radius of Curvature was then calculated averaging out the left and right curvatures.
 
 #### Step 6 Final results
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+To get the final results, I have defined `unwarped(binary_img)` which will unwarp the image using the same src and dst vertices but in opposite order. I unwarped the image as follows -
 
 ![alt text][image9]
+
+Then this image was masked over the original image and radius of curvature was also put to the resulting image -
 
 ![alt text][image8]
 
