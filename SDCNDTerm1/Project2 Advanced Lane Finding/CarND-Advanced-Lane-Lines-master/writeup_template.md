@@ -27,23 +27,28 @@ The goals / steps of this project are the following:
 
 ### README
 
-My Lane Detection algorithm is written as a python class here "./P2.ipynb" which can be used by instantiated a object of this class and calling process_image_pipeline function.
-
+My Lane Detection algorithm is written as a python class here "./P2.ipynb" which can be used by instantiated an object of this class and calling `process_image_pipeline()` function.
+```python
+lane_detection = Lane_Detection()
+output_image = lane_detection('test_images/test3.jpg')
+```
+It also gives user capability to define buffer size. This buffer size number will define how many images will be taken and average of the detected lanes will be taken and mask over original image. This helps remove jitters and smoothen out lane detection. By default it takes value of 5 during object creation of my class. This can be changed during object creation as follows:
+```python
+lane_detection = Lane_Detection(buffer_size=10) # this will take 10 images and average it out.
+output_image = lane_detection('test_images/test3.jpg')
+```
 ### Camera Calibration
 
-#### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
+The code for this step is contained in the first function definition of the class Lane_Detection which is located in file "./P2.ipynb". The function name is `camera_calibration()`. This function is called every time an object of the class is created and stores "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection. 
 
-The code for this step is contained in the first code cell of the IPython notebook located in  (or in lines # through # of the file called `some_file.py`).  
+Then I used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function. 
+To verify the result I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained the following result: 
 
-I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
+![alt text][image10]
 
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
+### Pipeline (single image)
 
-![alt text][image1]
-
-### Pipeline (single images)
-
-#### 1. Provide an example of a distortion-corrected image.
+#### Step 1 - Distortion correction
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image2]
