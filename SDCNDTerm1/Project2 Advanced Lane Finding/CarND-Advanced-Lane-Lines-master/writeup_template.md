@@ -54,18 +54,24 @@ To verify the result I applied this distortion correction to the test image usin
 
 #### Step 1 - Distortion correction
 
-I used previously calculated camera calibration matrix `mtx` and distortion coefficients `dst` to undistort images coming to the pipeline. This is defined as function of my `Lane_Detection` class `undistort(image)`. Here is an example of undistorted image of the road -
+I used previously calculated camera calibration matrix `mtx` and distortion coefficients `dst` to undistort images coming to the pipeline. This is defined as function `undistort(image)` of my `Lane_Detection` class. Here is an example of undistorted image of the road -
 
 ![alt text][image1]
 
 #### Step 2 Color and Gradient
 
+From the undistorted image, I converted into HSV color space. By defining upper and lower thresholds on saturation values, it gave me pretty good detection of lane lines. 
+I choose to define upper and lower threshold dynamic, based on the average brightness of the image. This helps in detecting lane line in darker and brighter images as well. To find out average brightness, I defined a function `avg_brightness(img)` in Lane_Detection class which returns average brightness ranging from 0 to 255 for a colored image.
+To improve more on the edge detections, I applied OpenCV Sobel operator along x-axis and combined the two binary images.
+I obtained the following result -
 
 ![alt text][image3]
 
+The code can be found in the function `color_gradient(undistorted_image)` of my `Lane_Detection` class.
+
 #### Step 3 Perspective Tranform
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `warp()` in my `Lane_Detection` class. I chose the hardcode the source and destination points in the following manner:
 
 ```python
 src = np.float32(
@@ -79,34 +85,55 @@ dst = np.float32(
     [(img_size[0] * 3 / 4), img_size[1]],
     [(img_size[0] * 3 / 4), 0]])
 ```
-
-This resulted in the following source and destination points:
-
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
-
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto the output of my `color_gradient` image
 
 ![alt text][image4]
 
 #### Step 4 Lane Lines Detection
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+My lane line detection alogrithm consists of three functions `draw_lanes(warped_binary)`, `find_lane_pixels(warped_binary)` and `search_around_lanes(warped_binary)` which are also defined in the `Lane_Detection` class.
+
+Warped image is passed to the `draw_lanes(warped_binary)` function which checks if this is the first time, it will call `find_lane_pixels(warped_binary)` which detect lane lines in the following way -
+
+    * It will divide the warped image into n windows horizontally and start with the bottom window.
+    * It will then draw an histogram to detect the peaks in the image. It can be seen as below -
 
 ![alt text][image7]
 
+Based on the histogram peaks, it will detect areas of search, based on `margin` defined. in my case, hardcoded it as 100, which worked fine in my case. After search, all the activated pixels are stored and marked as left or right and sent back to `draw_lanes(warped_binary)` function which will calculate 2d polynomial lines.
+
+You can see the highlighted detected pixels as below along with drawn left and right lane lines.
+    
 ![alt text][image5]
+
+Once the left and right lane polynomials are identified, I checked if I have previously stored values, if the number is greater than 3, I do mean of the all the values just to smoothen out the lane lines and make sure odd images in the videos are not causing jitters.
+
+After that all the points between detected left and right lane and identified and highlighted as below -
 
 ![alt text][image6]
 
 
 #### Step 5 Radius of Curvature
 
-I did this in lines # through # in my code in `my_other_file.py`
+Radius of curvature is also calculated in my funtion `draw_lanes(warped_binary)` and stored as a global variable.
+
+Radius of Curvature
+
+The radius of curvature (awesome tutorial here) at any point xxx of the function x=f(y)x = f(y)x=f(y) is given as follows:
+
+Rcurve=[1+(dxdy)2]3/2∣d2xdy2∣\LARGE R_{curve} = \frac{[1 + (\frac{dx}{dy})^2]^{3/2}}{|\frac{d^2x}{dy^2}|}Rcurve​=∣dy2d2x​∣[1+(dydx​)2]3/2​
+
+In the case of the second order polynomial above, the first and second derivatives are:
+
+f′(y)=dxdy=2Ay+B\large f'(y) = \frac{dx}{dy} = 2Ay + Bf′(y)=dydx​=2Ay+B
+
+f′′(y)=d2xdy2=2A\large f''(y) = \frac{d^2x}{dy^2} = 2Af′′(y)=dy2d2x​=2A
+
+So, our equation for radius of curvature becomes:
+
+Rcurve=(1+(2Ay+B)2)3/2∣2A∣\LARGE R_{curve} = \frac{(1 + (2Ay + B)^2)^{3/2}}{\left |2A \right |}Rcurve​=∣2A∣(1+(2Ay+B)2)3/2​
+
+The yyy values of your image increase from top to bottom, so if, for example, you wanted to measure the radius of curvature closest to your vehicle, you could evaluate the formula above at the yyy value corresponding to the bottom of your image, or in Python, at yvalue = image.shape[0].
 
 #### Step 6 Final results
 
