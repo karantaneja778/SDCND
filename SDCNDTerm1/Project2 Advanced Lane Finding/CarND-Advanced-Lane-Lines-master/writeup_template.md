@@ -148,5 +148,7 @@ Here's a [link to my video result](./output_video.mp4)
 ### Discussion
 
 #### 
-I used all the tools that were taught to me in my Advanced Lane Finding algorithm. I found out the pipeline I created is pretty slow and it is doing on an average 6-7 iterations per second which are not something we can put in the real world.
-I tried to explore 
+I used all the tools that were taught to me in my Advanced Lane Finding algorithm. I found out the pipeline I created is very slow and it is doing on an average 6-7 iterations per second (3-4 minutes for 50 seconds video) which are not something we can put in the real world.
+
+I am looking forward to learn more tools to make it faster and better
+
