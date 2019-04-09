@@ -22,12 +22,12 @@ The goals / steps of this project are the following:
 [image7]: ./output_images/histogram.jpg "Histogram"
 [image8]: ./output_images/result.jpg "Output Image"
 [image9]: ./output_images/unwarped.jpg "Unwarped Binary"
-[image10]: ./examples/undistort_binary.jpg "Undistort Chessboard"
+[image10]: ./examples/undistort_output.png "Undistort Chessboard"
 [video1]: ./output_video.mp4 "Video"
 
 ### README
 
-My Lane Detection algorithm is written as a python class here "./P2.ipynb" which can be used by instantiated an object of this class and calling `process_image_pipeline()` function.
+My `Lane Detection` algorithm is written as a python class here "./P2.ipynb" which can be used by instantiated an object of this class and calling `process_image_pipeline()` function.
 ```python
 lane_detection = Lane_Detection()
 output_image = lane_detection('test_images/test3.jpg')
@@ -41,25 +41,29 @@ output_image = lane_detection('test_images/test3.jpg')
 
 The code for this step is contained in the first function definition of the class Lane_Detection which is located in file "./P2.ipynb". The function name is `camera_calibration()`. This function is called every time an object of the class is created and stores "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection. 
 
-Then I used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function. 
+Then I used the output `objpoints` and `imgpoints` to compute the camera calibration matrix `mtx` and distortion coefficients `dst` using the `cv2.calibrateCamera()` function and store these values 
 To verify the result I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained the following result: 
 
 ![alt text][image10]
 
 ### Pipeline (single image)
 
-#### Step 1 - Distortion correction
+## Original image
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image2]
 
-#### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+#### Step 1 - Distortion correction
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I used previously calculated camera calibration matrix `mtx` and distortion coefficients `dst` to undistort images coming to the pipeline. This is defined as function of my `Lane_Detection` class `undistort(image)`. Here is an example of undistorted image of the road -
+
+![alt text][image1]
+
+#### Step 2 Color and Gradient
+
 
 ![alt text][image3]
 
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+#### Step 3 Perspective Tranform
 
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
@@ -89,29 +93,36 @@ I verified that my perspective transform was working as expected by drawing the 
 
 ![alt text][image4]
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+#### Step 4 Lane Lines Detection
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
+![alt text][image7]
+
 ![alt text][image5]
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+![alt text][image6]
+
+
+#### Step 5 Radius of Curvature
 
 I did this in lines # through # in my code in `my_other_file.py`
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+#### Step 6 Final results
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-![alt text][image6]
+![alt text][image9]
+
+![alt text][image8]
 
 ---
 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+#### You can check out the video in which I ran my pipeline. Result looks pretty accurate.
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./output_video.mp4)
 
 ---
 
