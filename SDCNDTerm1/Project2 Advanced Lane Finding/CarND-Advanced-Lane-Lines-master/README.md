@@ -115,7 +115,7 @@ After that all the points between detected left and right lane and identified an
 
 #### Step 5 Radius of Curvature
 
-Radius of curvature is also calculated in my funtion `draw_lanes(warped_binary)` and stored as a global variable.
+Radius of curvature is calculated in my funtion `radius_of_curvature()` and stored as a global variable.
 
 The radius of curvature at any point x of the function x=f(y) is given as follows:
 
